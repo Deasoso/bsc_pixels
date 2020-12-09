@@ -4,7 +4,9 @@ import WheelUtils from './utils/WheelUtils'
 import './Canvas.css'
 
 class Canvas extends PureComponent {
+
   componentDidMount() {
+    this.initCanvas()
     this.soft_gradient = ["white", "black", "white", "black"]
     this.hard_gradient = ["white", "green", "blue", "red"]
     this.ctx = CanvasUtils.getContext(this.canvas, this.props.aliasing)
@@ -82,6 +84,20 @@ class Canvas extends PureComponent {
   getImageData = (...args) => this.ctx.getImageData(...args)
 
   putImageData = (...args) => this.ctx.putImageData(...args)
+
+  initCanvas = () => {
+    console.log('initing');
+    var myImage = new Image();
+    myImage.src = require("./fakedatas/pixels.png") //背景图片 你自己本地的图片或者在线图片
+    myImage.crossOrigin = 'Anonymous';
+    myImage.onload = this.load_buffer_data.bind(this, myImage);
+  }
+
+  load_buffer_data = (img) => {
+    console.log(this.canvas)
+    let dimension = this.canvas.width
+    this.drawImage(img, 0.5 * (dimension - img.width), 0.5 * (dimension - img.height))
+  }
 
   render() {
     return (

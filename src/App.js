@@ -172,7 +172,7 @@ class App extends PureComponent {
       this.update_progress(20)
     })
   }
-
+  
   timestamp = () => `&disable_cache=${+ new Date()}`
 
   load_canvases = () => {
@@ -195,6 +195,7 @@ class App extends PureComponent {
   }
 
   load_cache_image = () => {
+    // 此处需要从firebase读取文件，之前截获到放在了src/fakedatas里，可以供测试用
     Promise.all([firebase.storage().ref('init.json').getDownloadURL(), firebase.storage().ref('pixels.png').getDownloadURL(), firebase.storage().ref('prices.png').getDownloadURL()]).then(([init_url, pixels_url, prices_url]) => {
       pixels_url += + this.timestamp()
       this.setState({ pixels_url: pixels_url })
@@ -854,8 +855,9 @@ class App extends PureComponent {
   }
 
   render() {
+    //  key="1" style={this.loading_style()}
     return ([
-      <div className="App" key="1" style={this.loading_style()}>
+      <div className="App">
         <Helmet>
           <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" />
         </Helmet>
@@ -915,7 +917,7 @@ class App extends PureComponent {
         </main>
         <KeyListener on_key_update={this.update_key} />
       </div>,
-      <LoadingPanel key="2" progress={this.state.loading_progress} />
+      // <LoadingPanel key="2" progress={this.state.loading_progress} />
     ])
   }
 }
